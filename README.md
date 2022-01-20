@@ -6,4 +6,4 @@
 
 Forked from https://github.com/hannahcode/wordle and adopted for MK language and keyboard.
 
-The dictionary is still WIP.
+The [dictionary](https://github.com/tdelev/words-mk) is still WIP.
