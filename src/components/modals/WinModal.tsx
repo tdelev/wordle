@@ -2,7 +2,7 @@ import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon, XCircleIcon } from '@heroicons/react/outline'
 import { MiniGrid } from '../mini-grid/MiniGrid'
-import { shareGame, shareStatus } from '../../lib/share'
+import { shareStatus } from '../../lib/share'
 
 type Props = {
     isOpen: boolean
@@ -78,7 +78,8 @@ export const WinModal = ({
                                     </Dialog.Title>
                                     <div className="mt-2">
                                         <MiniGrid guesses={guesses}/>
-                                        <p className="text-sm text-gray-500">Игравте одлично.</p>
+                                        <p className="text-sm text-gray-500">Одлично, споделете го резултатот од
+                                            играта.</p>
                                     </div>
                                 </div>
                             </div>
@@ -92,16 +93,6 @@ export const WinModal = ({
                                     }}
                                 >
                                     Сподели
-                                </button>
-                                <button
-                                    type="button"
-                                    className="inline-flex mt-2 justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-slate-600 text-base font-medium text-white hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 sm:text-sm"
-                                    onClick={() => {
-                                        shareGame()
-                                        handleShare()
-                                    }}
-                                >
-                                    Сподели ја играта
                                 </button>
                             </div>
                         </div>
