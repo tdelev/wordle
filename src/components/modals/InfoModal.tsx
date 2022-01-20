@@ -58,46 +58,46 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
                     as="h3"
                     className="text-lg leading-6 font-medium text-gray-900"
                   >
-                    How to play
+                    Како се игра
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      Guess the WORDLE in 6 tries. After each guess, the color
-                      of the tiles will change to show how close your guess was
-                      to the word.
+                      Погодете го ЗБОРЛЕ во 6 обиди. По секој обид, бојата на
+                      квадратите ќе се менува да ви покаже колку вашиот обид е
+                      блиску до бараниот збор.
                     </p>
 
                     <div className="flex justify-center mb-1 mt-4">
-                      <Cell value="W" status="correct" />
-                      <Cell value="E" />
-                      <Cell value="A" />
-                      <Cell value="R" />
-                      <Cell value="Y" />
+                      <Cell value="П" status="correct" />
+                      <Cell value="И" />
+                      <Cell value="Л" />
+                      <Cell value="О" />
+                      <Cell value="Т" />
                     </div>
                     <p className="text-sm text-gray-500">
-                      The letter W is in the word and in the correct spot.
+                      Буквата П е во зборот и на точна позиција.
                     </p>
 
                     <div className="flex justify-center mb-1 mt-4">
-                      <Cell value="P" />
-                      <Cell value="I" />
-                      <Cell value="L" status="present" />
-                      <Cell value="O" />
-                      <Cell value="T" />
+                      <Cell value="Ч" />
+                      <Cell value="О" />
+                      <Cell value="Р" status="present" />
+                      <Cell value="Б" />
+                      <Cell value="А" />
                     </div>
                     <p className="text-sm text-gray-500">
-                      The letter L is in the word but in the wrong spot.
+                      Буквата Р е во зборот но на погрешна позиција.
                     </p>
 
                     <div className="flex justify-center mb-1 mt-4">
-                      <Cell value="V" />
-                      <Cell value="A" />
-                      <Cell value="G" />
-                      <Cell value="U" status="absent" />
-                      <Cell value="E" />
+                      <Cell value="Ш" />
+                      <Cell value="А" />
+                      <Cell value="П" />
+                      <Cell value="К" status="absent" />
+                      <Cell value="А" />
                     </div>
                     <p className="text-sm text-gray-500">
-                      The letter U is not in the word in any spot.
+                      Буквата К не е во зборот на ниту една позиција.
                     </p>
                   </div>
                 </div>
