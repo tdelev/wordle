@@ -3,12 +3,15 @@ import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon, XCircleIcon } from '@heroicons/react/outline'
 import { MiniGrid } from '../mini-grid/MiniGrid'
 import { shareStatus } from '../../lib/share'
+import { Time } from "../../lib/words";
+import { TimeLeft } from "./TimeLeft";
 
 type Props = {
     isOpen: boolean
     handleClose: () => void
     guesses: string[]
     handleShare: () => void
+    timeLeft: Time
 }
 
 export const WinModal = ({
@@ -16,6 +19,7 @@ export const WinModal = ({
                              handleClose,
                              guesses,
                              handleShare,
+                             timeLeft
                          }: Props) => {
     return (
         <Transition.Root show={isOpen} as={Fragment}>
@@ -82,6 +86,9 @@ export const WinModal = ({
                                             играта.</p>
                                     </div>
                                 </div>
+                            </div>
+                            <div className="mt-5">
+                                <TimeLeft timeLeft={timeLeft}/>
                             </div>
                             <div className="mt-5 sm:mt-6">
                                 <button

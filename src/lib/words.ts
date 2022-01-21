@@ -1,6 +1,10 @@
 import { WORDS } from '../constants/wordlist'
 import { VALID_GUESSES } from '../constants/valid-guesses'
 
+// January 1, 2022 Game Epoch
+const EPOCH_START = 1640991600000
+const MS_IN_DAY = 86400000
+
 export const isWordInWordList = (word: string) => {
     return (
         WORDS.includes(word.toLowerCase()) ||
@@ -8,21 +12,35 @@ export const isWordInWordList = (word: string) => {
     )
 }
 
-export const isWinningWord = (word: string) => {
-    return solution === word
+export const getWordOfDay = () => {
+    return WORDS[getWordOfDayIndex()].toUpperCase()
 }
 
-export const getWordOfDay = () => {
-    // January 1, 2022 Game Epoch
-    const epochMs = 1641013200000
-    const now = Date.now()
-    const msInDay = 86400000
-    const index = Math.floor((now - epochMs) / msInDay) % WORDS.length;
+export const isWinningWord = (word: string) => {
+    return getWordOfDay() === word
+}
 
+export const getWordOfDayIndex = () => {
+    const now = Date.now()
+    return Math.floor((now - EPOCH_START) / MS_IN_DAY) % WORDS.length;
+}
+
+export const getTimeUntilNextWord = () => {
+    const solutionIndex = getWordOfDayIndex()
+    const time = (EPOCH_START + (solutionIndex + 1) * MS_IN_DAY) - Date.now()
+    const date = new Date(time)
     return {
-        solution: WORDS[index].toUpperCase(),
-        solutionIndex: index,
+        hours: (24 + (date.getHours() - 1)) % 24,
+        minutes: date.getMinutes(),
+        seconds: date.getSeconds(),
+        solutionIndex: solutionIndex
     }
 }
+export type Time = {
+    hours: number,
+    minutes: number,
+    seconds: number
+}
 
-export const { solution, solutionIndex } = getWordOfDay()
+export const formatTime = (time: number) => time >= 10 ? `${time}` : `0${time}`
+

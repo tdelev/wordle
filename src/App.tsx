@@ -1,4 +1,4 @@
-import { InformationCircleIcon } from '@heroicons/react/outline'
+import { ChartBarIcon, InformationCircleIcon } from '@heroicons/react/outline'
 import { useEffect, useState } from 'react'
 import { Alert } from './components/alerts/Alert'
 import { Grid } from './components/grid/Grid'
@@ -6,9 +6,11 @@ import { Keyboard } from './components/keyboard/Keyboard'
 import { AboutModal } from './components/modals/AboutModal'
 import { InfoModal } from './components/modals/InfoModal'
 import { WinModal } from './components/modals/WinModal'
-import { isWinningWord, isWordInWordList, solution } from './lib/words'
+import { getTimeUntilNextWord, getWordOfDay, getWordOfDayIndex, isWinningWord, isWordInWordList } from './lib/words'
 import { loadGameStateFromLocalStorage, saveGameStateToLocalStorage, } from './lib/localStorage'
 import { convert, LETTERS_EN } from './lib/keyboard';
+import { addStatsForCompletedGame, loadStats } from "./lib/stats";
+import { StatsModal } from "./components/modals/StatsModals";
 
 function App() {
     const [currentGuess, setCurrentGuess] = useState('')
@@ -16,28 +18,44 @@ function App() {
     const [isWinModalOpen, setIsWinModalOpen] = useState(false)
     const [isInfoModalOpen, setIsInfoModalOpen] = useState(false)
     const [isAboutModalOpen, setIsAboutModalOpen] = useState(false)
+    const [isNotEnoughLetters, setIsNotEnoughLetters] = useState(false)
+    const [isStatsModalOpen, setIsStatsModalOpen] = useState(false)
     const [isWordNotFoundAlertOpen, setIsWordNotFoundAlertOpen] = useState(false)
     const [isGameLost, setIsGameLost] = useState(false)
     const [shareComplete, setShareComplete] = useState(false)
+    const [timeUntilNextWord, setTimeUntilNextWord] = useState(getTimeUntilNextWord());
     const [guesses, setGuesses] = useState<string[]>(() => {
         const loaded = loadGameStateFromLocalStorage()
-        if (loaded?.solution !== solution) {
+        if (loaded?.solutionIndex !== getWordOfDayIndex()) {
             return []
         }
-        if (loaded.guesses.includes(solution)) {
+        if (loaded.guesses.includes(getWordOfDay())) {
             setIsGameWon(true)
         }
         return loaded.guesses
     })
 
+    const [stats, setStats] = useState(() => loadStats())
+
     useEffect(() => {
-        saveGameStateToLocalStorage({ guesses, solution })
+        const state = loadGameStateFromLocalStorage()
+        if (state?.solutionIndex === timeUntilNextWord.solutionIndex) {
+            const timer = setTimeout(() => {
+                setTimeUntilNextWord(getTimeUntilNextWord);
+            }, 1000);
+            return () => clearTimeout(timer);
+        } else {
+            setIsGameWon(false)
+            setGuesses([])
+        }
+    }, [timeUntilNextWord]);
+
+    useEffect(() => {
+        saveGameStateToLocalStorage({ guesses, solutionIndex: getWordOfDayIndex() })
     }, [guesses])
 
     useEffect(() => {
-        if (isGameWon) {
-            setIsWinModalOpen(true)
-        }
+        setIsWinModalOpen(isGameWon)
     }, [isGameWon])
 
     const onChar = (value: string) => {
@@ -55,6 +73,13 @@ function App() {
     }
 
     const onEnter = () => {
+        if (currentGuess.length !== 5) {
+            setIsNotEnoughLetters(true)
+            return setTimeout(() => {
+                setIsNotEnoughLetters(false)
+            }, 2000)
+        }
+
         if (!isWordInWordList(currentGuess)) {
             setIsWordNotFoundAlertOpen(true)
             return setTimeout(() => {
@@ -69,23 +94,26 @@ function App() {
             setCurrentGuess('')
 
             if (winningWord) {
+                setStats(addStatsForCompletedGame(stats, guesses.length))
                 return setIsGameWon(true)
             }
 
             if (guesses.length === 5) {
+                setStats(addStatsForCompletedGame(stats, guesses.length + 1))
                 setIsGameLost(true)
                 return setTimeout(() => {
                     setIsGameLost(false)
-                }, 2000)
+                }, 5000)
             }
         }
     }
 
     return (
         <div className="py-8 max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <Alert message="Зборот не е пронајден во речникот на Зборле." isOpen={isWordNotFoundAlertOpen}/>
+            <Alert message="Немате внесено доволно букви" isOpen={isNotEnoughLetters}/>
+            <Alert message="Зборот не е пронајден во речникот на Зборле" isOpen={isWordNotFoundAlertOpen}/>
             <Alert
-                message={`Изгубивте, бараниот збор е ${solution}`}
+                message={`Изгубивте, бараниот збор е ${getWordOfDay()}`}
                 isOpen={isGameLost}
             />
             <Alert
@@ -94,10 +122,14 @@ function App() {
                 variant="success"
             />
             <div className="flex w-80 mx-auto items-center mb-2">
-                <h1 className="text-4xl text-center text-slate-700 tracking-widest grow uppercase font-bold">Зборле</h1>
                 <InformationCircleIcon
                     className="h-6 w-6 cursor-pointer"
                     onClick={() => setIsInfoModalOpen(true)}
+                />
+                <h1 className="text-4xl text-center text-slate-700 tracking-widest grow uppercase font-bold">Зборле</h1>
+                <ChartBarIcon
+                    className="h-6 w-6 cursor-pointer"
+                    onClick={() => setIsStatsModalOpen(true)}
                 />
             </div>
             <Grid guesses={guesses} currentGuess={currentGuess}/>
@@ -118,10 +150,16 @@ function App() {
                         setShareComplete(false)
                     }, 2000)
                 }}
+                timeLeft={timeUntilNextWord}
             />
             <InfoModal
                 isOpen={isInfoModalOpen}
                 handleClose={() => setIsInfoModalOpen(false)}
+            />
+            <StatsModal
+                isOpen={isStatsModalOpen}
+                handleClose={() => setIsStatsModalOpen(false)}
+                gameStats={stats}
             />
             <AboutModal
                 isOpen={isAboutModalOpen}
