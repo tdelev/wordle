@@ -43,7 +43,7 @@ export const Keyboard = ({ onChar, onDelete, onEnter, guesses }: Props) => {
     }, [onEnter, onDelete, onChar])
 
     return (
-        <div>
+        <div className="mx-1">
             <div className="flex justify-center mb-1">
                 {FIRST_ROW.map(letter => (
                     <Key key={letter} value={letter as CharValue} onClick={onClick} status={charStatuses[letter]}/>
