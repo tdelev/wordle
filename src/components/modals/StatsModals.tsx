@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { XCircleIcon } from '@heroicons/react/outline'
+import { XIcon } from '@heroicons/react/outline'
 import { StatBar } from '../stats/StatBar'
 import { Histogram } from '../stats/Histogram'
 import { GameStats } from '../../lib/localStorage'
@@ -54,8 +54,8 @@ export const StatsModal = ({ isOpen, handleClose, gameStats }: Props) => {
                             transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6"
                         >
                             <div className="absolute right-4 top-4">
-                                <XCircleIcon
-                                    className="h-6 w-6 cursor-pointer"
+                                <XIcon
+                                    className="h-6 w-6 cursor-pointer hover:bg-slate-200"
                                     onClick={handleClose}
                                 />
                             </div>

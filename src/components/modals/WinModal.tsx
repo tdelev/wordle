@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { CheckIcon, XCircleIcon } from '@heroicons/react/outline'
+import { CheckIcon, XIcon } from '@heroicons/react/outline'
 import { MiniGrid } from '../mini-grid/MiniGrid'
 import { shareStatus } from '../../lib/share'
 import { Time } from "../../lib/words";
@@ -60,8 +60,8 @@ export const WinModal = ({
                         <div
                             className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
                             <div className="absolute right-4 top-4">
-                                <XCircleIcon
-                                    className="h-6 w-6 cursor-pointer"
+                                <XIcon
+                                    className="h-6 w-6 cursor-pointer hover:bg-slate-200"
                                     onClick={() => handleClose()}
                                 />
                             </div>
@@ -76,9 +76,9 @@ export const WinModal = ({
                                 <div className="mt-3 text-center sm:mt-5">
                                     <Dialog.Title
                                         as="h3"
-                                        className="text-lg leading-6 font-medium text-gray-900"
+                                        className="text-lg leading-6 font-bold text-slate-900"
                                     >
-                                        Погодок!
+                                        Го погодивте зборот!
                                     </Dialog.Title>
                                     <div className="mt-2">
                                         <MiniGrid guesses={guesses}/>

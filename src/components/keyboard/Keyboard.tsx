@@ -2,6 +2,7 @@ import { FIRST_ROW, KeyValue, LETTERS_EN, LETTERS_MK, SECOND_ROW, THIRD_ROW } fr
 import { CharValue, getStatuses } from '../../lib/statuses'
 import { Key } from './Key'
 import { useEffect } from 'react'
+import { BackspaceIcon } from "@heroicons/react/outline";
 
 type Props = {
     onChar: (value: string) => void
@@ -56,13 +57,13 @@ export const Keyboard = ({ onChar, onDelete, onEnter, guesses }: Props) => {
             </div>
             <div className="flex justify-center">
                 <Key width={65.4} value="ENTER" onClick={onClick}>
-                    Enter
+                    ENTER
                 </Key>
                 {THIRD_ROW.map(letter => (
                     <Key key={letter} value={letter as CharValue} onClick={onClick} status={charStatuses[letter]}/>
                 ))}
                 <Key width={65.4} value="DELETE" onClick={onClick}>
-                    Delete
+                    <BackspaceIcon className="w-6 h-6"/>
                 </Key>
             </div>
         </div>

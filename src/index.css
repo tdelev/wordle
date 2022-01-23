@@ -1,3 +1,106 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.pop-in {
+    animation-name: PopIn;
+    animation-duration: 100ms;
+}
+
+@keyframes PopIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    40% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+}
+
+.flip-in {
+    animation-name: FlipIn;
+    animation-duration: 250ms;
+    animation-timing-function: ease-in;
+}
+
+.flip-out {
+    animation-name: FlipOut;
+    animation-duration: 250ms;
+    animation-timing-function: ease-in;
+}
+
+@keyframes FlipOut {
+    0% {
+        transform: rotateX(-90deg);
+    }
+    100% {
+        transform: rotateX(0);
+    }
+}
+
+
+@keyframes FlipIn {
+    0% {
+        transform: rotateX(0);
+    }
+    100% {
+        transform: rotateX(-90deg);
+    }
+}
+
+.win {
+    animation-name: Bounce;
+    animation-duration: 1000ms;
+}
+
+@keyframes Bounce {
+    0%, 20% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-30px);
+    }
+    50% {
+        transform: translateY(5px);
+    }
+    60% {
+        transform: translateY(-15px);
+    }
+    80% {
+        transform: translateY(2px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.shake {
+    animation-name: Shake;
+    animation-duration: 600ms;
+
+}
+
+@keyframes Shake {
+    10%,
+    90% {
+        transform: translateX(-1px);
+    }
+
+    20%,
+    80% {
+        transform: translateX(2px);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translateX(-4px);
+    }
+
+    40%,
+    60% {
+        transform: translateX(4px);
+    }
+}

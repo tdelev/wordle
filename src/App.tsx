@@ -1,4 +1,4 @@
-import { ChartBarIcon, InformationCircleIcon } from '@heroicons/react/outline'
+import { ChartBarIcon, InformationCircleIcon, QuestionMarkCircleIcon } from '@heroicons/react/outline'
 import { useEffect, useState } from 'react'
 import { Alert } from './components/alerts/Alert'
 import { Grid } from './components/grid/Grid'
@@ -39,26 +39,32 @@ function App() {
 
     useEffect(() => {
         const state = loadGameStateFromLocalStorage()
-        if (state?.solutionIndex === timeUntilNextWord.solutionIndex) {
-            const timer = setTimeout(() => {
-                setTimeUntilNextWord(getTimeUntilNextWord);
-            }, 1000);
-            return () => clearTimeout(timer);
+        if (!state || (state?.solutionIndex === timeUntilNextWord.solutionIndex)) {
+            if (isWinModalOpen) {
+                const timer = setTimeout(() => {
+                    setTimeUntilNextWord(getTimeUntilNextWord);
+                }, 1000);
+                return () => clearTimeout(timer);
+            }
         } else {
             setIsGameWon(false)
             setGuesses([])
         }
-    }, [timeUntilNextWord]);
+    }, [timeUntilNextWord, isWinModalOpen]);
 
     useEffect(() => {
         saveGameStateToLocalStorage({ guesses, solutionIndex: getWordOfDayIndex() })
     }, [guesses])
 
     useEffect(() => {
-        setIsWinModalOpen(isGameWon)
+        const timeout = setTimeout(() => setIsWinModalOpen(isGameWon), 1000)
+        return () => clearTimeout(timeout)
     }, [isGameWon])
 
     const onChar = (value: string) => {
+        if (isGameWon) {
+            return
+        }
         let converted = value;
         if (LETTERS_EN.includes(value)) {
             converted = convert(value);
@@ -73,6 +79,9 @@ function App() {
     }
 
     const onEnter = () => {
+        if (isGameWon) {
+            return
+        }
         if (currentGuess.length !== 5) {
             setIsNotEnoughLetters(true)
             return setTimeout(() => {
@@ -122,7 +131,7 @@ function App() {
                 variant="success"
             />
             <div className="flex w-80 mx-auto items-center mb-2">
-                <InformationCircleIcon
+                <QuestionMarkCircleIcon
                     className="h-6 w-6 cursor-pointer"
                     onClick={() => setIsInfoModalOpen(true)}
                 />
@@ -132,7 +141,8 @@ function App() {
                     onClick={() => setIsStatsModalOpen(true)}
                 />
             </div>
-            <Grid guesses={guesses} currentGuess={currentGuess}/>
+            <Grid guesses={guesses} currentGuess={currentGuess}
+                  invalid={isNotEnoughLetters || isWordNotFoundAlertOpen} win={isGameWon}/>
             <Keyboard
                 onChar={onChar}
                 onDelete={onDelete}
@@ -171,6 +181,10 @@ function App() {
                 className="mx-auto mt-8 flex items-center px-4 py-1 border border-transparent text-xs font-medium rounded text-slate-700 bg-slate-100 hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500"
                 onClick={() => setIsAboutModalOpen(true)}
             >
+                <InformationCircleIcon
+                    className="h-6 w-6 cursor-pointer mr-2"
+                    onClick={() => setIsInfoModalOpen(true)}
+                />
                 За играта
             </button>
         </div>
